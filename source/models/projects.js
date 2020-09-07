@@ -54,8 +54,11 @@ export class Projects {
               );
 
               const id = parsedRssProject.$.id;
-              const imagePath = parsedRssProject.picture.join('');
               const projectLink = parsedRssProject.url.join('');
+
+              const imagePath = $(element)
+                .find('.photo__pic')
+                .css('background-image');
 
               const projectName = $(element)
                 .find('.p-project__name.link-holder')
