@@ -1,0 +1,77 @@
+{
+  "parser": "babel-eslint",
+  "parserOptions": {
+    "ecmaVersion": 2018,
+    "sourceType": "module",
+    "ecmaFeatures": {
+      "impliedStrict": true,
+      "legacyDecorators": true
+    }
+  },
+  "env": {
+    "node": true,
+    "jest": true,
+    "es6": true
+  },
+  "globals": {
+    "__ENV__": false,
+    "__DEV__": false,
+    "__STAGE__": false,
+    "__PROD__": false,
+    "__TEST__": false,
+    "__MODEL__": false
+  },
+ "extends": [
+    "standard",
+    "prettier",
+    "prettier/standard",
+    "plugin:jest/recommended"
+  ],
+  "plugins": ["prettier", "jest", "babel"],
+  "rules": {
+    "prettier/prettier": [
+      "error",
+      {
+        "endOfLine": "auto"
+      }
+    ],
+    "no-restricted-syntax": [
+      "error",
+      {
+        "selector": "ExportDefaultDeclaration",
+        "message": "Restricted default export, prefer named exports!"
+      }
+    ],
+    "no-console": [
+      "error",
+      {
+        "allow": ["warn", "error"]
+      }
+    ],
+    "jest/lowercase-name": 2,
+    "jest/no-disabled-tests": 2,
+    "jest/no-focused-tests": 2,
+    "jest/no-identical-title": 2,
+    "jest/no-large-snapshots": [
+      2,
+      {
+        "maxSize": 10
+      }
+    ],
+    "jest/no-test-prefixes": 2,
+    "jest/no-jest-import": 2,
+    "jest/prefer-to-have-length": 2,
+    "jest/prefer-to-be-null": 2,
+    "jest/prefer-to-be-undefined": 2,
+    "jest/valid-describe": 2,
+    "jest/valid-expect": 2,
+    "jest/valid-expect-in-promise": 2,
+    "for-direction": 2,
+    "getter-return": [
+      2,
+      {
+        "allowImplicit": false
+      }
+    ]
+  }
+}

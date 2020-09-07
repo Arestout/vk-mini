@@ -1,0 +1,1 @@
+export { VkPassport } from './passport';
