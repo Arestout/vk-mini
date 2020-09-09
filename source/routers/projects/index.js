@@ -8,8 +8,8 @@ import { getProject } from './project';
 
 const router = express.Router();
 
-router.get('/', get);
+router.get('/', cors(), get);
 
-router.get('/:project', getProject);
+router.get('/:project', cors(), getProject);
 
 export { router as projects };

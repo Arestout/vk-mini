@@ -15,7 +15,6 @@ export const get = async (req, res) => {
     const model = new Projects();
     const data = await model.getAll(req.query);
 
-    res.header('Access-Control-Allow-Origin', '*');
     res.status(200).json(data);
   } catch (error) {
     res.status(400).json({ message: error.message });
