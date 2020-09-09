@@ -1,5 +1,6 @@
 // Core
 import express from 'express';
+import cors from 'cors';
 
 // Instruments
 import { get } from './route';
