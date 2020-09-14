@@ -4,35 +4,60 @@ import dg from 'debug';
 //Instruments
 import cheerio from 'cheerio';
 import axios from 'axios';
+import puppeteer from 'puppeteer';
+// import devices from 'puppeteer/DeviceDescriptors';
 import xml2js from 'xml2js';
 import queryString from 'query-string';
 
 const debug = dg('models:projects');
+const iPhoneX = puppeteer.devices['iPhone X'];
 
 export class Projects {
   constructor() {
-    this.parsedRssProjects = [];
     this.projects = [];
+    this.parsedRssProjects = [];
+    this.pagesCount = 0;
   }
 
   async getRssProjects() {
-    let parsedRssProjects = [];
     return new Promise((resolve, reject) => {
       axios
         .get('https://dobro.mail.ru/projects/rss/target/')
         .then(response => xml2js.parseStringPromise(response.data))
         .then(result => {
-          parsedRssProjects = result.torg_price.shop[0].offers[0].offer;
-          resolve(parsedRssProjects);
+          this.parsedRssProjects = result.torg_price.shop[0].offers[0].offer;
+          resolve(this.parsedRssProjects);
         })
         .catch(error => debug(error));
     });
   }
 
+  async getPagesCount(url) {
+    const SELECTOR = '.m-pager__inner';
+    const projectsCountDesktop = 12;
+    const projectsCountMobile = 5;
+    await puppeteer.launch({ headless: true }).then(async browser => {
+      const page = await browser.newPage();
+      await page.emulate(iPhoneX);
+      await page.goto(url);
+      const pagesMobileVersion = await page.$$eval(
+        SELECTOR,
+        elements => elements[elements.length - 1].innerText
+      );
+      if (pagesMobileVersion && pagesMobileVersion > 2) {
+        this.pagesCount =
+          (pagesMobileVersion * projectsCountMobile) / projectsCountDesktop;
+      }
+      await browser.close();
+    });
+    return this.pagesCount;
+  }
+
   async getParsedProjects(query) {
     const stringifiedQuery = queryString.stringify(query);
     const url = `https://dobro.mail.ru/projects/?${stringifiedQuery}`;
-    const parsedRssProjects = await this.getRssProjects();
+
+    await Promise.all([this.getRssProjects(), this.getPagesCount(url)]);
 
     return new Promise((resolve, reject) => {
       axios
@@ -49,7 +74,7 @@ export class Projects {
                 .text()
                 .trim();
 
-              const parsedRssProject = parsedRssProjects.find(
+              const parsedRssProject = this.parsedRssProjects.find(
                 item => item.typePrefix.join(' ') === projectLead
               );
 
@@ -94,7 +119,10 @@ export class Projects {
               };
             }
           );
-          resolve(this.projects);
+          resolve({
+            pages: this.pagesCount,
+            projects: this.projects,
+          });
         })
         .catch(error => {
           debug(error.message);

@@ -7,10 +7,10 @@ import { logger, NotFoundError } from './utils';
 import vkPassport from './utils/auth/passport';
 
 // Routers
-import { projects, auth } from './routers';
+import { projects, auth, account } from './routers';
 
 // Passport
-// vkPassport(passport);
+vkPassport(passport);
 
 const app = express();
 
@@ -33,6 +33,7 @@ if (process.env.NODE_ENV === 'development') {
 // Routers
 app.use('/projects', projects);
 app.use('/auth', auth);
+app.use('/account', account);
 
 app.use('*', (req, res, next) => {
   const error = new NotFoundError(

@@ -1,8 +1,13 @@
 import qs from 'query-string';
 import crypto from 'crypto';
 
-export function checkHash(urlParams) {
+export const checkHash = (req, res, next) => {
+  const urlParams = req.query;
+
+  console.log(req.query);
+  const secretKey = process.env.VKONTAKTE_APP_SECRET;
   const ordered = {};
+
   Object.keys(urlParams)
     .sort()
     .forEach(key => {
@@ -21,5 +26,9 @@ export function checkHash(urlParams) {
     .replace(/\//g, '_')
     .replace(/=$/, '');
 
-  return paramsHash === urlParams.sign;
-}
+  if (paramsHash === urlParams.sign) {
+    return next();
+  } else {
+    res.status(401).json({ message: 'Неправильные данные' });
+  }
+};

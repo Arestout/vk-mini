@@ -4,12 +4,7 @@ import passport from 'passport';
 
 const router = express.Router();
 
-router.get(
-  '/vkontakte',
-  passport.authenticate('vkontakte', {
-    scope: ['profile', 'notify', 'friends', 'offline'],
-  })
-);
+router.get('/vkontakte', passport.authenticate('vkontakte', {}));
 
 router.get(
   '/vkontakte/callback',
