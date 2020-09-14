@@ -1,16 +1,16 @@
 // Core
 import express from 'express';
-import passport from 'passport';
+// import passport from 'passport';
 
 // Instruments
 import { logger, NotFoundError } from './utils';
-import vkPassport from './utils/auth/passport';
+// import vkPassport from './utils/auth/passport';
 
 // Routers
-import { projects, auth, account } from './routers';
+import { projects, account } from './routers';
 
 // Passport
-vkPassport(passport);
+// vkPassport(passport);
 
 const app = express();
 
@@ -32,7 +32,7 @@ if (process.env.NODE_ENV === 'development') {
 
 // Routers
 app.use('/projects', projects);
-app.use('/auth', auth);
+// app.use('/auth', auth);
 app.use('/account', account);
 
 app.use('*', (req, res, next) => {
