@@ -19,4 +19,10 @@ export class Projects {
 
     return data;
   }
+
+  async getCities() {
+    const data = await this.models.projects.getCities();
+
+    return data;
+  }
 }

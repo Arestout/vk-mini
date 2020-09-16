@@ -45,8 +45,9 @@ export class Projects {
         elements => elements[elements.length - 1].innerText
       );
       if (pagesMobileVersion && pagesMobileVersion > 2) {
-        this.pagesCount =
-          (pagesMobileVersion * projectsCountMobile) / projectsCountDesktop;
+        this.pagesCount = Math.ceil(
+          (pagesMobileVersion * projectsCountMobile) / projectsCountDesktop
+        );
       }
       await browser.close();
     });
@@ -161,6 +162,35 @@ export class Projects {
           projectData.text = $('.article__text').html();
 
           resolve(projectData);
+        })
+        .catch(error => debug(error));
+    });
+  }
+
+  async getCities() {
+    const cities = [];
+    const url = `https://dobro.mail.ru/`;
+
+    return new Promise((resolve, reject) => {
+      axios
+        .get(url)
+        .then(response => {
+          const $ = cheerio.load(response.data, {
+            decodeEntities: false,
+          });
+          $('.suggest__item.js-dropdown__suggest-item.js-ga-filter-city').each(
+            (index, element) => {
+              const cityName = $(element).text();
+              const cityTitle = $(element).attr('value');
+
+              cities[index] = {
+                id: index,
+                name: cityName,
+                title: cityTitle,
+              };
+            }
+          );
+          resolve(cities);
         })
         .catch(error => debug(error));
     });
