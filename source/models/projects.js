@@ -34,7 +34,7 @@ export class Projects {
 
   async getPagesCount(url) {
     const SELECTOR = '.m-pager__inner';
-    const projectsCountDesktop = 12;
+    const projectsCountDesktop = 10;
     const projectsCountMobile = 5;
     await puppeteer.launch({ headless: true }).then(async browser => {
       const page = await browser.newPage();
