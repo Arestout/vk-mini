@@ -183,8 +183,8 @@ export class Projects {
               const cityName = $(element).text();
               const cityTitle = $(element).attr('value');
 
-              cities[index] = {
-                id: index,
+              cities[index - 1] = {
+                id: index - 1,
                 name: cityName,
                 title: cityTitle,
               };
