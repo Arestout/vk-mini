@@ -180,8 +180,8 @@ export class Projects {
           });
           $('.suggest__item.js-dropdown__suggest-item.js-ga-filter-city').each(
             (index, element) => {
-              const cityName = $(element).text();
-              const cityTitle = $(element).attr('value');
+              const cityTitle = $(element).text();
+              const cityName = $(element).attr('value');
 
               cities[index - 1] = {
                 id: index - 1,
