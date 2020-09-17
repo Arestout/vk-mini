@@ -67,7 +67,7 @@ export class Projects {
           const $ = cheerio.load(response.data);
           $('.p-projects__item.p-projects__item_default').each(
             (index, element) => {
-              const projectLead = $(element)
+              const description = $(element)
                 .find('.p-project__lead > strong')
                 .remove()
                 .end()
@@ -76,17 +76,18 @@ export class Projects {
                 .trim();
 
               const parsedRssProject = this.parsedRssProjects.find(
-                item => item.typePrefix.join(' ') === projectLead
+                item => item.typePrefix.join(' ') === description
               );
 
               const id = parsedRssProject.$.id;
-              const projectLink = parsedRssProject.url.join('');
+              const path = parsedRssProject.model.join('');
 
-              const imagePath = $(element)
+              const image = $(element)
                 .find('.photo__pic')
-                .css('background-image');
+                .css('background-image')
+                .replace(/(url\(|\))/g, '');
 
-              const projectName = $(element)
+              const title = $(element)
                 .find('.p-project__name.link-holder')
                 .text();
 
@@ -94,29 +95,41 @@ export class Projects {
                 .find('.p-project__info-city.link-holder_over')
                 .text();
 
-              const projectMoney = $(element)
+              const sum = $(element)
                 .find('.p-money__money')
                 .first()
-                .text();
+                .text()
+                .replace('р.', '')
+                .trim()
+                .split(' ')
+                .join('');
 
-              const projectMoneyGoal = $(element)
+              const target = $(element)
                 .find('.p-money__money.p-money__money_goal')
+                .text()
+                .replace('р.', '')
+                .trim()
+                .split(' ')
+                .join('');
+
+              const imageLabel = $(element)
+                .find('.badge__text')
                 .text();
 
-              const progressBar = $(element)
-                .find('.p-progressbar__bar.p-progressbar__bar_front')
-                .css('width');
+              // const progressBar = $(element)
+              //   .find('.p-progressbar__bar.p-progressbar__bar_front')
+              //   .css('width');
 
               this.projects[index] = {
                 id,
-                imagePath,
+                image: `https://dobro.mail.ru${image}`,
                 city,
-                projectName,
-                projectLink,
-                projectLead,
-                projectMoney,
-                projectMoneyGoal,
-                progressBar,
+                title,
+                path,
+                description,
+                sum: Number(sum),
+                target: Number(target),
+                urgent: imageLabel === 'срочно',
               };
             }
           );

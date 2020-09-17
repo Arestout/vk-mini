@@ -5,7 +5,7 @@ import debug from 'debug';
 import { app } from './server';
 import { getPort } from './utils';
 
-// DB
+// DB;
 // import './db';
 
 const PORT = getPort();
