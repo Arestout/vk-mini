@@ -131,12 +131,12 @@ export class Projects {
                 sum: sum !== target ? Number(sum) : 0,
                 target: Number(target),
                 urgent: imageLabel === 'срочно',
-                page: query.page ? Number(query.page) : 1,
               };
             }
           );
           resolve({
             pages: this.pagesCount,
+            page: query.page ? Number(query.page) : 1,
             projects: this.projects,
           });
         })
