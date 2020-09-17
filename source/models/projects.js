@@ -34,7 +34,7 @@ export class Projects {
 
   async getPagesCount(url) {
     const SELECTOR = '.m-pager__inner';
-    const projectsCountDesktop = 10;
+    const projectsCountDesktop = 12;
     const projectsCountMobile = 5;
     await puppeteer.launch({ headless: true }).then(async browser => {
       const page = await browser.newPage();
@@ -42,7 +42,7 @@ export class Projects {
       await page.goto(url);
       const pagesMobileVersion = await page.$$eval(
         SELECTOR,
-        elements => elements[elements.length - 1].innerText
+        elements => elements[elements.length - 1]?.innerText
       );
       if (pagesMobileVersion && pagesMobileVersion > 2) {
         this.pagesCount = Math.ceil(
@@ -65,6 +65,7 @@ export class Projects {
         .get(url)
         .then(response => {
           const $ = cheerio.load(response.data);
+
           $('.p-projects__item.p-projects__item_default').each(
             (index, element) => {
               const description = $(element)
@@ -140,6 +141,7 @@ export class Projects {
         })
         .catch(error => {
           debug(error.message);
+          reject([]);
         });
     });
   }
