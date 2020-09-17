@@ -128,7 +128,7 @@ export class Projects {
                 title,
                 path,
                 description,
-                sum: Number(sum),
+                sum: sum !== target ? Number(sum) : 0,
                 target: Number(target),
                 urgent: imageLabel === 'срочно',
                 page: query.page ? Number(query.page) : 1,
