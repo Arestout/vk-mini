@@ -131,6 +131,7 @@ export class Projects {
                 sum: Number(sum),
                 target: Number(target),
                 urgent: imageLabel === 'срочно',
+                page: query.page ? Number(query.page) : 1,
               };
             }
           );
