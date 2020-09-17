@@ -31,7 +31,7 @@ if (process.env.NODE_ENV === 'development') {
 }
 
 // Routers
-app.use('/projects', projects);
+app.use('/projects-data', projects);
 // app.use('/auth', auth);
 app.use('/account', account);
 
