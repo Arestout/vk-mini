@@ -5,7 +5,6 @@ import dg from 'debug';
 import cheerio from 'cheerio';
 import axios from 'axios';
 import puppeteer from 'puppeteer';
-// import devices from 'puppeteer/DeviceDescriptors';
 import xml2js from 'xml2js';
 import queryString from 'query-string';
 
@@ -20,16 +19,15 @@ export class Projects {
   }
 
   async getRssProjects() {
-    return new Promise((resolve, reject) => {
-      axios
-        .get('https://dobro.mail.ru/projects/rss/target/')
-        .then(response => xml2js.parseStringPromise(response.data))
-        .then(result => {
-          this.parsedRssProjects = result.torg_price.shop[0].offers[0].offer;
-          resolve(this.parsedRssProjects);
-        })
-        .catch(error => debug(error));
-    });
+    try {
+      const response = await axios.get(
+        'https://dobro.mail.ru/projects/rss/target/'
+      );
+      const xmlResult = await xml2js.parseStringPromise(response.data);
+      this.parsedRssProjects = xmlResult.torg_price.shop[0].offers[0].offer;
+    } catch (error) {
+      debug(error);
+    }
   }
 
   async getPagesCount(url) {
@@ -150,6 +148,7 @@ export class Projects {
   async getProjectData(path) {
     const projectData = {};
     const url = `https://dobro.mail.ru/projects${path}`;
+    await this.getRssProjects();
 
     return new Promise((resolve, reject) => {
       axios
@@ -159,23 +158,47 @@ export class Projects {
             decodeEntities: false,
           });
 
-          projectData.cityLink = $('.link.color_gray.breadcrumbs__link').attr(
-            'href'
+          const imageLabel = $('.badge__text').text();
+          const image = $('.photo__pic')
+            .css('background-image')
+            .replace(/(url\(|\))/g, '');
+
+          const parsedRssProject = this.parsedRssProjects.find(
+            item =>
+              item.url.join(' ') === `https://dobro.mail.ru/projects${path}`
           );
+
+          const id = parsedRssProject.$.id;
+
+          projectData.id = id;
+          projectData.description = $('.p-project__lead').text();
+          projectData.cityLink = $('.link.color_gray.breadcrumbs__link')
+            .attr('href')
+            .replace('/projects/', '');
           projectData.city = $(
             '.link.color_gray.breadcrumbs__link > .link__text'
           ).text();
-          projectData.imagePath = $('.photo__pic').css('background-image');
-          projectData.money = $(
+          projectData.image = `https://dobro.mail.ru${image}`;
+          projectData.sum = $(
             '.cell.valign_middle > .p-money.p-money_bold > .p-money__money'
           )
             .first()
-            .text();
-          projectData.moneyGoal = $('.p-money__money.p-money__money_goal')
+            .text()
+            .replace('р.', '')
+            .trim()
+            .split(' ')
+            .join('');
+          projectData.target = $('.p-money__money.p-money__money_goal')
             .first()
-            .text();
-          projectData.shortDescription = $('.p-project__lead').text();
-          projectData.text = $('.article__text').html();
+            .text()
+            .replace('р.', '')
+            .trim()
+            .split(' ')
+            .join('');
+          projectData.description = $('.p-project__lead').text();
+          projectData.date = $('.note__text.breadcrumbs__text').text();
+          projectData.urgent = imageLabel === 'срочно';
+          projectData.html = $('.article__text').html();
 
           resolve(projectData);
         })

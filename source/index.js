@@ -6,7 +6,7 @@ import { app } from './server';
 import { getPort } from './utils';
 
 // DB;
-// import './db';
+import './db';
 
 const PORT = getPort();
 const dg = debug('server:main');

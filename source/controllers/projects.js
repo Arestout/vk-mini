@@ -1,10 +1,14 @@
 // Instruments
-import { Projects as ProjectsModel } from '../models';
+import {
+  Projects as ProjectsModel,
+  DbProjects as DbProjectsModel,
+} from '../models';
 
 export class Projects {
   constructor() {
     this.models = {
       projects: new ProjectsModel(),
+      dbProjects: new DbProjectsModel(),
     };
   }
 
@@ -22,6 +26,12 @@ export class Projects {
 
   async getCities() {
     const data = await this.models.projects.getCities();
+
+    return data;
+  }
+
+  async addToDb() {
+    const data = await this.models.dbProjects.addAllProjects();
 
     return data;
   }
