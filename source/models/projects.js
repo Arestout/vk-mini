@@ -171,6 +171,9 @@ export class Projects {
           const id = parsedRssProject.$.id;
 
           projectData.id = id;
+          projectData.title = $('.hdr__inner')
+            .first()
+            .text();
           projectData.description = $('.p-project__lead').text();
           projectData.cityLink = $('.link.color_gray.breadcrumbs__link')
             .attr('href')
@@ -198,7 +201,14 @@ export class Projects {
           projectData.description = $('.p-project__lead').text();
           projectData.date = $('.note__text.breadcrumbs__text').text();
           projectData.urgent = imageLabel === 'срочно';
-          projectData.html = $('.article__text').html();
+          projectData.html = $('.article__text')
+            .html()
+            .replace(/:url\(/g, ':url(https://dobro.mail.ru');
+          projectData.gallery = $(
+            '.article__item.article__item_alignment_left.article__item_gallery'
+          )
+            .html()
+            .replace(/:url\(/g, ':url(https://dobro.mail.ru');
 
           resolve(projectData);
         })

@@ -7,6 +7,7 @@ import xml2js from 'xml2js';
 
 //Instruments
 import { DbProjects as DbProjectsOdm } from '../odm';
+import { connection } from '../db';
 
 const debug = dg('models:dbProjects');
 
@@ -123,8 +124,8 @@ export class DbProjects {
         description,
         target: Number(target),
       };
-      console.log(project);
-      DbProjectsOdm.create(project);
+      connection.dropCollection('projects');
+      //   DbProjectsOdm.create(project);
     });
 
     await browser.close();

@@ -20,7 +20,7 @@ const mongooseOptions = {
   autoIndex: false,
 };
 
-const connection = mongoose.connect(
+export const connection = mongoose.connect(
   `mongodb+srv://${DB_URL}/${DB_NAME}?retryWrites=true&w=majority`,
   mongooseOptions
 );
