@@ -217,7 +217,12 @@ export class Projects {
   }
 
   async getCities() {
-    const cities = [];
+    const data = {
+      stats: {},
+      cities: [],
+    };
+    // const cities = [];
+    // const stats = [];
     const url = `https://dobro.mail.ru/`;
 
     return new Promise((resolve, reject) => {
@@ -232,14 +237,33 @@ export class Projects {
               const cityTitle = $(element).text();
               const cityName = $(element).attr('value');
 
-              cities[index - 1] = {
+              data.cities[index - 1] = {
                 id: index - 1,
                 name: cityName,
                 title: cityTitle,
               };
             }
           );
-          resolve(cities);
+          $('.p-dobro-stats__item-count').each((index, element) => {
+            const item = $(element).text();
+            switch (index) {
+              case 0:
+                data.stats.fonds = Number(item.split(' ').join(''));
+                break;
+              case 1:
+                data.stats.checked_projects = Number(item.split(' ').join(''));
+                break;
+              case 2:
+                data.stats.people = Number(item.split(' ').join(''));
+              case 3:
+                data.stats.success_projects = Number(item.split(' ').join(''));
+                break;
+              default:
+                break;
+            }
+          });
+
+          resolve(data);
         })
         .catch(error => debug(error));
     });

@@ -72,6 +72,7 @@ export class DbProjects {
   }
 
   async addAllProjects() {
+    // await DbProjectsOdm.deleteMany({});
     const browser = await puppeteer.launch({
       headless: false,
       args: ['--no-sandbox', '--disable-setuid-sandbox'],
@@ -124,11 +125,12 @@ export class DbProjects {
         description,
         target: Number(target),
       };
-      connection.dropCollection('projects');
+
       //   DbProjectsOdm.create(project);
     });
 
     await browser.close();
+
     return 'done';
   }
 }
