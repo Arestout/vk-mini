@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 
-const DbProjectsSchema = new mongoose.Schema({
-  projectId: {
+const ProjectsSchema = new mongoose.Schema({
+  id: {
     type: Number,
     required: true,
   },
@@ -27,4 +27,4 @@ const DbProjectsSchema = new mongoose.Schema({
   },
 });
 
-export const DbProjects = mongoose.model('projects', DbProjectsSchema);
+export const projects = mongoose.model('projects', ProjectsSchema);

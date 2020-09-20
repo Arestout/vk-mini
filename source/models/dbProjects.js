@@ -6,7 +6,7 @@ import puppeteer from 'puppeteer';
 import xml2js from 'xml2js';
 
 //Instruments
-import { DbProjects as DbProjectsOdm } from '../odm';
+import { projects } from '../odm';
 
 const debug = dg('models:dbProjects');
 
@@ -73,8 +73,9 @@ export class DbProjects {
   }
 
   async addAllProjects() {
-    // await DbProjectsOdm.deleteMany({});
-    const projects = [];
+    // await projects.deleteMany({});
+    // const projects = [];
+
     try {
       const browser = await puppeteer.launch({
         headless: false,
@@ -136,37 +137,21 @@ export class DbProjects {
         };
 
         if (project.id) {
-          //   projects.push(project);
-
           const query = { id };
           let update = {
             $setOnInsert: project,
           };
           const options = { upsert: true };
-          DbProjectsOdm.updateOne(query, update, options).catch(error =>
-            console.log(error)
-          );
+          projects
+            .updateOne(query, update, options)
+            .catch(error => console.log(error));
         }
-        // console.log(project);
+
         //   DbProjectsOdm.create(project);
       });
 
       await browser.close();
-      //   console.log('1');
-      //   const query = { id };
-      //   console.log('2');
-      //   let update = {
-      //     $setOnInsert: projects,
-      //   };
-      //   console.log('3');
-      //   console.log(update);
-      //   const options = { upsert: true };
-      //   console.log('4');
-      //   await DbProjectsOdm.updateMany(query, update, options).catch(error =>
-      //     console.log(error)
-      //   );
-      //   console.log('2');
-      //   console.log(projects.length);
+
       return 'done';
     } catch (error) {
       debug(error);

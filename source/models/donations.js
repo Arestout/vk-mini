@@ -1,10 +1,5 @@
-// Core
-import dg from 'debug';
-
 //Instruments
-import { donations } from '../odm';
-
-const debug = dg('models:donations');
+import { donations, projects } from '../odm';
 
 export class Donations {
   constructor(data) {
@@ -12,22 +7,58 @@ export class Donations {
   }
 
   async create() {
-    const data = await donations.create(this.data);
+    const { project_id } = this.data;
+    const project = await projects.findOne({ id: project_id });
 
-    return data;
+    const donation = await donations.create({
+      ...this.data,
+      project_id: project._id,
+    });
+
+    return donation;
   }
 
-  async getById() {
-    const { vkId } = this.data;
+  //   async addDonation() {
+  //     const { id, payload } = this.data;
 
-    const data = await classes
-      .find({ vkId })
-      .populate('projects.project', '-_id -__v')
+  //     const data = await donations.findOneAndUpdate(
+  //         { id },
+  //         { $addToSet: { '': payload } },
+  //         { new: true },
+  //     );
+
+  //     if (!data) {
+  //         throw new NotFoundError(`can not find document with hash ${hash}`);
+  //     }
+
+  //     return data;
+  // }
+
+  async getDonationsById() {
+    const { user_id } = this.data;
+
+    const data = await donations
+      .find({ user_id })
+      .populate('project_id', '-_id -__v')
       .select('-__v -id')
       .lean();
 
     if (!data) {
       return 'Нет добрых дел :(';
+    }
+
+    return data;
+  }
+
+  async removeByTransactionId() {
+    const { transaction_id } = this.data;
+
+    const data = await lessons.findOneAndDelete({ transaction_id });
+
+    if (!data) {
+      throw new NotFoundError(
+        `can not find document with transaction id ${transaction_id}`
+      );
     }
 
     return data;

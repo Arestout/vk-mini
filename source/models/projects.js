@@ -246,15 +246,6 @@ export class Projects {
               .replace(/src="/g, 'src="https://dobro.mail.ru');
           }
 
-          // const html = $('.article__text').html();
-
-          // projectData.html = $('.article__text')
-          //   .html()
-          //   // .replace(/:url\(/g, ':url(https://dobro.mail.ru')
-          //   .replace('src="', 'src="https://dobro.mail.ru');
-
-          console.log(projectData.html);
-
           resolve(projectData);
         })
         .catch(error => debug(error));

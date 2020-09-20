@@ -1,3 +1,3 @@
 export { User } from './User';
-export { DbProjects } from './DbProjects';
+export { projects } from './Projects';
 export { donations } from './Donations';
