@@ -7,7 +7,6 @@ import xml2js from 'xml2js';
 
 //Instruments
 import { DbProjects as DbProjectsOdm } from '../odm';
-import { connection } from '../db';
 
 const debug = dg('models:dbProjects');
 
@@ -66,71 +65,112 @@ export class DbProjects {
         );
       }
       items = await page.evaluate(this.extractItems);
-    } catch (error) {}
+    } catch (error) {
+      debug(error);
+    }
 
     return items;
   }
 
   async addAllProjects() {
     // await DbProjectsOdm.deleteMany({});
-    const browser = await puppeteer.launch({
-      headless: false,
-      args: ['--no-sandbox', '--disable-setuid-sandbox'],
-    });
-    const page = await browser.newPage();
+    const projects = [];
+    try {
+      const browser = await puppeteer.launch({
+        headless: false,
+        args: ['--no-sandbox', '--disable-setuid-sandbox'],
+      });
+      const page = await browser.newPage();
 
-    await page.goto(
-      'https://dobro.mail.ru/projects/?recipient=all&aid=all&city=any'
-    );
-
-    await this.getRssProjects();
-    const items = await this.getParsedProjects(page, 1500);
-
-    items.forEach(item => {
-      const $ = cheerio.load(item);
-      const description = $('.p-project__lead')
-        .find('strong')
-        .remove()
-        .end()
-        .text()
-        .trim();
-
-      const parsedRssProject = this.parsedRssProjects.find(
-        item => item.typePrefix.join(' ') === description
+      await page.goto(
+        'https://dobro.mail.ru/projects/?recipient=all&aid=all&city=any'
       );
-      const id = parsedRssProject.$.id;
-      const path = parsedRssProject.model.join('');
 
-      const image = $('.photo__pic')
-        .css('background-image')
-        .replace(/(url\(|\))/g, '');
+      await this.getRssProjects();
+      const items = await this.getParsedProjects(page, 1500);
 
-      const title = $('.p-project__name.link-holder').text();
+      items.forEach(item => {
+        const $ = cheerio.load(item);
+        const description = $('.p-project__lead')
+          .find('strong')
+          .remove()
+          .end()
+          .text()
+          .trim();
 
-      const city = $('.p-project__info-city.link-holder_over').text();
+        const parsedRssProject = this.parsedRssProjects.find(
+          item => item.typePrefix.join(' ') === description
+        );
 
-      const target = $('.p-money__money.p-money__money_goal')
-        .text()
-        .replace('р.', '')
-        .trim()
-        .split(' ')
-        .join('');
+        let projectId = null;
+        let path = null;
+        if (parsedRssProject) {
+          projectId = parsedRssProject.$.id;
+          path = parsedRssProject.model.join('');
+        }
 
-      const project = {
-        id,
-        image: `https://dobro.mail.ru${image}`,
-        city,
-        title,
-        path,
-        description,
-        target: Number(target),
-      };
+        const image = $('.photo__pic')
+          .css('background-image')
+          .replace(/(url\(|\))/g, '');
 
-      //   DbProjectsOdm.create(project);
-    });
+        const title = $('.p-project__name.link-holder').text();
 
-    await browser.close();
+        const city = $('.p-project__info-city.link-holder_over').text();
 
-    return 'done';
+        const target = $('.p-money__money.p-money__money_goal')
+          .text()
+          .replace('р.', '')
+          .trim()
+          .split(' ')
+          .join('');
+
+        const project = {
+          projectId,
+          image: `https://dobro.mail.ru${image}`,
+          city,
+          title,
+          path,
+          description,
+          target: Number(target),
+          createdAt: Date.now(),
+        };
+
+        if (project.id) {
+          //   projects.push(project);
+
+          const query = { id };
+          let update = {
+            $setOnInsert: project,
+          };
+          const options = { upsert: true };
+          DbProjectsOdm.updateOne(query, update, options).catch(error =>
+            console.log(error)
+          );
+        }
+        // console.log(project);
+        //   DbProjectsOdm.create(project);
+      });
+
+      await browser.close();
+      //   console.log('1');
+      //   const query = { id };
+      //   console.log('2');
+      //   let update = {
+      //     $setOnInsert: projects,
+      //   };
+      //   console.log('3');
+      //   console.log(update);
+      //   const options = { upsert: true };
+      //   console.log('4');
+      //   await DbProjectsOdm.updateMany(query, update, options).catch(error =>
+      //     console.log(error)
+      //   );
+      //   console.log('2');
+      //   console.log(projects.length);
+      return 'done';
+    } catch (error) {
+      debug(error);
+      return error;
+    }
   }
 }

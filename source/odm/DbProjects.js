@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 
 const DbProjectsSchema = new mongoose.Schema({
-  id: {
+  projectId: {
     type: Number,
     required: true,
   },

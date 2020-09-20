@@ -6,6 +6,8 @@ import cors from 'cors';
 // Instruments
 import { checkHash } from '../../utils';
 
+import { getDonations } from './donations';
+
 const debug = dg('router:account');
 
 const router = express.Router();
@@ -22,5 +24,7 @@ const get = async (req, res) => {
 };
 
 router.get('/', [checkHash], get);
+
+router.get('/donations', [checkHash], getDonations);
 
 export { router as account };

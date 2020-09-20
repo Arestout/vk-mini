@@ -78,8 +78,12 @@ export class Projects {
                 item => item.typePrefix.join(' ') === description
               );
 
-              const id = parsedRssProject.$.id;
-              const path = parsedRssProject.model.join('');
+              let id = null;
+              let path = null;
+              if (parsedRssProject) {
+                id = parsedRssProject.$.id;
+                path = parsedRssProject.model.join('');
+              }
 
               const image = $(element)
                 .find('.photo__pic')
@@ -119,17 +123,19 @@ export class Projects {
               //   .find('.p-progressbar__bar.p-progressbar__bar_front')
               //   .css('width');
 
-              this.projects[index] = {
-                id,
-                image: `https://dobro.mail.ru${image}`,
-                city,
-                title,
-                path,
-                description,
-                sum: sum !== target ? Number(sum) : 0,
-                target: Number(target),
-                urgent: imageLabel === 'срочно',
-              };
+              if (id) {
+                this.projects[index] = {
+                  id,
+                  image: `https://dobro.mail.ru${image}`,
+                  city,
+                  title,
+                  path,
+                  description,
+                  sum: sum !== target ? Number(sum) : 0,
+                  target: Number(target),
+                  urgent: imageLabel === 'срочно',
+                };
+              }
             }
           );
           resolve({
