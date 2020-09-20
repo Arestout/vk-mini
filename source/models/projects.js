@@ -169,12 +169,20 @@ export class Projects {
             .css('background-image')
             .replace(/(url\(|\))/g, '');
 
+          console.log('1');
+
           const parsedRssProject = this.parsedRssProjects.find(
             item =>
               item.url.join(' ') === `https://dobro.mail.ru/projects${path}`
           );
 
-          const id = parsedRssProject.$.id;
+          let id = null;
+
+          if (parsedRssProject) {
+            id = parsedRssProject.$.id;
+          }
+
+          console.log('2');
 
           projectData.id = id;
           projectData.title = $('.hdr__inner')
@@ -188,6 +196,9 @@ export class Projects {
             '.link.color_gray.breadcrumbs__link > .link__text'
           ).text();
           projectData.image = `https://dobro.mail.ru${image}`;
+
+          console.log('3');
+
           projectData.sum = $(
             '.cell.valign_middle > .p-money.p-money_bold > .p-money__money'
           )
@@ -207,14 +218,42 @@ export class Projects {
           projectData.description = $('.p-project__lead').text();
           projectData.date = $('.note__text.breadcrumbs__text').text();
           projectData.urgent = imageLabel === 'срочно';
-          projectData.html = $('.article__text')
-            .html()
-            .replace(/:url\(/g, ':url(https://dobro.mail.ru');
-          projectData.gallery = $(
+
+          console.log('4');
+
+          const gallery = $(
             '.article__item.article__item_alignment_left.article__item_gallery'
-          )
-            .html()
-            .replace(/:url\(/g, ':url(https://dobro.mail.ru');
+          );
+
+          if (gallery.html()) {
+            projectData.gallery = $(gallery)
+              .html()
+              .replace(/:url\(/g, ':url(https://dobro.mail.ru');
+
+            projectData.html = $('.article__text')
+              .find(
+                '.article__item.article__item_alignment_left.article__item_gallery'
+              )
+              .remove()
+              .end()
+              .html()
+              .replace(/src="/g, 'src="https://dobro.mail.ru');
+          } else {
+            projectData.gallery = '';
+
+            projectData.html = $('.article__text')
+              .html()
+              .replace(/src="/g, 'src="https://dobro.mail.ru');
+          }
+
+          // const html = $('.article__text').html();
+
+          // projectData.html = $('.article__text')
+          //   .html()
+          //   // .replace(/:url\(/g, ':url(https://dobro.mail.ru')
+          //   .replace('src="', 'src="https://dobro.mail.ru');
+
+          console.log(projectData.html);
 
           resolve(projectData);
         })
