@@ -1,5 +1,6 @@
 //Instruments
-import { donations, projects } from '../odm';
+import { NotFoundError } from '../utils';
+import { donations, projects, users } from '../odm';
 
 export class Donations {
   constructor(data) {
@@ -7,13 +8,22 @@ export class Donations {
   }
 
   async create() {
-    const { project_id } = this.data;
+    const { project_id, vk_user_id } = this.data;
+
     const project = await projects.findOne({ id: project_id });
+    const user = await users.findOne({ vk_user_id });
 
     const donation = await donations.create({
       ...this.data,
       project_id: project._id,
+      status: 'PAID',
+      created_at: Date.now(),
     });
+    const { _id } = donation;
+
+    user.donations.push({ _id });
+    user.points += 1;
+    await user.save();
 
     return donation;
   }
@@ -35,13 +45,19 @@ export class Donations {
   // }
 
   async getDonationsById() {
-    const { user_id } = this.data;
+    const { vk_user_id } = this.data;
 
     const data = await donations
-      .find({ user_id })
+      .find({ vk_user_id })
       .populate('project_id', '-_id -__v')
       .select('-__v -id')
       .lean();
+
+    // const data = await users
+    //   .findOne({ user_id })
+    //   .populate('donations', '-_id -__v')
+    //   .select('-_id -__v')
+    //   .lean();
 
     if (!data) {
       return 'Нет добрых дел :(';
@@ -53,7 +69,7 @@ export class Donations {
   async removeByTransactionId() {
     const { transaction_id } = this.data;
 
-    const data = await lessons.findOneAndDelete({ transaction_id });
+    const data = await donations.findOneAndDelete({ transaction_id });
 
     if (!data) {
       throw new NotFoundError(

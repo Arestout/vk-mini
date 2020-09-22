@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-import { projects } from './';
+import { projects } from './Projects';
 
 const DonationsSchema = new mongoose.Schema({
   user_id: {
@@ -16,6 +16,10 @@ const DonationsSchema = new mongoose.Schema({
   },
   transaction_id: {
     type: Number,
+    required: true,
+  },
+  status: {
+    type: String,
     required: true,
   },
   created_at: {

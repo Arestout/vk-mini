@@ -137,14 +137,10 @@ export class DbProjects {
         };
 
         if (project.id) {
-          const query = { id };
-          let update = {
-            $setOnInsert: project,
-          };
-          const options = { upsert: true };
-          projects
-            .updateOne(query, update, options)
-            .catch(error => console.log(error));
+          (async () => {
+            const doesProjectExist = await projects.exists({ id: project.id });
+            !doesProjectExist && (await projects.create(project));
+          })();
         }
 
         //   DbProjectsOdm.create(project);

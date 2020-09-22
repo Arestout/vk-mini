@@ -1,7 +1,7 @@
 // Instruments
 import {
   Projects as ProjectsModel,
-  Projects as DbProjectsModel,
+  DbProjects as DbProjectsModel,
 } from '../models';
 
 export class Projects {

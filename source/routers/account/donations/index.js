@@ -2,7 +2,7 @@
 import dg from 'debug';
 
 // Instruments
-import { Donations } from '../../../controllers';
+import { Account } from '../../../controllers';
 
 const debug = dg('router:account:donations');
 
@@ -10,9 +10,9 @@ export const getDonationsById = async (req, res) => {
   debug(`${req.method} - ${req.originalUrl}`);
 
   try {
-    const { user_id } = req.query;
+    const { vk_user_id } = req.query;
 
-    const model = new Donations({ user_id });
+    const model = new Account({ vk_user_id });
     const data = await model.getDonationsById();
 
     res.status(201).json(data);
@@ -25,7 +25,7 @@ export const postDonations = async (req, res) => {
   debug(`${req.method} - ${req.originalUrl}`);
 
   try {
-    const model = new Donations(req.body);
+    const model = new Account(req.body);
     const data = await model.create();
 
     res.status(201).json(data);
