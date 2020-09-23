@@ -26,9 +26,7 @@ export const postWallPoints = async (req, res) => {
 
   try {
     const { vk_user_id } = req.query;
-    const {
-      data: { post_id },
-    } = req.body;
+    const { post_id } = req.body;
 
     if (!post_id) {
       res.status(400).json({ message: 'Публикация не подтверждена' });
@@ -47,9 +45,7 @@ export const postStoriesPoints = async (req, res) => {
 
   try {
     const { vk_user_id } = req.query;
-    const {
-      data: { story_id },
-    } = req.body;
+    const { story_id } = req.body;
 
     if (!story_id) {
       res.status(400).json({ message: 'Публикация не подтверждена' });

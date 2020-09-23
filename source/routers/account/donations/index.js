@@ -25,7 +25,7 @@ export const postDonations = async (req, res) => {
   debug(`${req.method} - ${req.originalUrl}`);
 
   try {
-    const model = new Account(req.body.data);
+    const model = new Account(req.body);
     const data = await model.create();
 
     res.status(201).json(data);
