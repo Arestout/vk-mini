@@ -3,8 +3,8 @@ import crypto from 'crypto';
 
 export const checkHash = (req, res, next) => {
   const urlParams = req.query;
+  // const urlParams = req.body.params;
 
-  console.log(req.query);
   const secretKey = process.env.VKONTAKTE_APP_SECRET;
   const ordered = {};
 

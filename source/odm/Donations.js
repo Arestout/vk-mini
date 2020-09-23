@@ -2,7 +2,7 @@ import mongoose from 'mongoose';
 import { projects } from './Projects';
 
 const DonationsSchema = new mongoose.Schema({
-  user_id: {
+  vk_user_id: {
     type: Number,
     required: true,
   },

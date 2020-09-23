@@ -16,9 +16,11 @@ export class Donations {
     const donation = await donations.create({
       ...this.data,
       project_id: project._id,
+      transaction_id: 125684894551388,
       status: 'PAID',
       created_at: Date.now(),
     });
+
     const { _id } = donation;
 
     user.donations.push({ _id });

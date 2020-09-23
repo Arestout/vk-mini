@@ -169,8 +169,6 @@ export class Projects {
             .css('background-image')
             .replace(/(url\(|\))/g, '');
 
-          console.log('1');
-
           const parsedRssProject = this.parsedRssProjects.find(
             item =>
               item.url.join(' ') === `https://dobro.mail.ru/projects${path}`
@@ -181,8 +179,6 @@ export class Projects {
           if (parsedRssProject) {
             id = parsedRssProject.$.id;
           }
-
-          console.log('2');
 
           projectData.id = id;
           projectData.title = $('.hdr__inner')
@@ -196,8 +192,6 @@ export class Projects {
             '.link.color_gray.breadcrumbs__link > .link__text'
           ).text();
           projectData.image = `https://dobro.mail.ru${image}`;
-
-          console.log('3');
 
           projectData.sum = $(
             '.cell.valign_middle > .p-money.p-money_bold > .p-money__money'
@@ -218,8 +212,6 @@ export class Projects {
           projectData.description = $('.p-project__lead').text();
           projectData.date = $('.note__text.breadcrumbs__text').text();
           projectData.urgent = imageLabel === 'срочно';
-
-          console.log('4');
 
           const gallery = $(
             '.article__item.article__item_alignment_left.article__item_gallery'
