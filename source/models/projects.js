@@ -7,6 +7,7 @@ import axios from 'axios';
 import puppeteer from 'puppeteer';
 import xml2js from 'xml2js';
 import queryString from 'query-string';
+import { projects } from '../odm';
 
 const debug = dg('models:projects');
 const iPhoneX = puppeteer.devices['iPhone X'];
@@ -152,96 +153,99 @@ export class Projects {
   }
 
   async getProjectData(path) {
-    const projectData = {};
-    const url = `https://dobro.mail.ru/projects${path}`;
-    await this.getRssProjects();
+    try {
+      const projectData = {};
+      const url = `https://dobro.mail.ru/projects${path}`;
+      await this.getRssProjects();
 
-    return new Promise((resolve, reject) => {
-      axios
-        .get(url)
-        .then(response => {
-          const $ = cheerio.load(response.data, {
-            decodeEntities: false,
-          });
+      const response = await axios.get(url);
+      const $ = cheerio.load(response.data, {
+        decodeEntities: false,
+      });
 
-          const imageLabel = $('.badge__text').text();
-          const image = $('.photo__pic')
-            .css('background-image')
-            .replace(/(url\(|\))/g, '');
+      const imageLabel = $('.badge__text').text();
+      const image = $('.photo__pic')
+        .css('background-image')
+        .replace(/(url\(|\))/g, '');
+      const title = $('.hdr__inner')
+        .first()
+        .text();
 
-          const parsedRssProject = this.parsedRssProjects.find(
-            item =>
-              item.url.join(' ') === `https://dobro.mail.ru/projects${path}`
-          );
+      const parsedRssProject = this.parsedRssProjects.find(
+        item => item.url.join(' ') === `https://dobro.mail.ru/projects${path}`
+      );
 
-          let id = null;
+      let id = null;
 
-          if (parsedRssProject) {
-            id = parsedRssProject.$.id;
-          }
+      if (parsedRssProject) {
+        id = parsedRssProject.$.id;
+      }
 
-          projectData.id = id;
-          projectData.title = $('.hdr__inner')
-            .first()
-            .text();
-          projectData.description = $('.p-project__lead').text();
-          projectData.cityLink = $('.link.color_gray.breadcrumbs__link')
-            .attr('href')
-            .replace('/projects/', '');
-          projectData.city = $(
-            '.link.color_gray.breadcrumbs__link > .link__text'
-          ).text();
-          projectData.image = `https://dobro.mail.ru${image}`;
+      if (!id) {
+        const project = await projects.findOne({ title });
+        id = project.id;
+      }
 
-          projectData.sum = $(
-            '.cell.valign_middle > .p-money.p-money_bold > .p-money__money'
-          )
-            .first()
-            .text()
-            .replace('р.', '')
-            .trim()
-            .split(' ')
-            .join('');
-          projectData.target = $('.p-money__money.p-money__money_goal')
-            .first()
-            .text()
-            .replace('р.', '')
-            .trim()
-            .split(' ')
-            .join('');
-          projectData.description = $('.p-project__lead').text();
-          projectData.date = $('.note__text.breadcrumbs__text').text();
-          projectData.urgent = imageLabel === 'срочно';
+      projectData.id = id;
+      projectData.title = title;
+      projectData.description = $('.p-project__lead').text();
+      projectData.cityLink = $('.link.color_gray.breadcrumbs__link')
+        .attr('href')
+        .replace('/projects/', '');
+      projectData.city = $(
+        '.link.color_gray.breadcrumbs__link > .link__text'
+      ).text();
+      projectData.image = `https://dobro.mail.ru${image}`;
 
-          const gallery = $(
+      projectData.sum = $(
+        '.cell.valign_middle > .p-money.p-money_bold > .p-money__money'
+      )
+        .first()
+        .text()
+        .replace('р.', '')
+        .trim()
+        .split(' ')
+        .join('');
+      projectData.target = $('.p-money__money.p-money__money_goal')
+        .first()
+        .text()
+        .replace('р.', '')
+        .trim()
+        .split(' ')
+        .join('');
+      projectData.description = $('.p-project__lead').text();
+      projectData.date = $('.note__text.breadcrumbs__text').text();
+      projectData.urgent = imageLabel === 'срочно';
+
+      const gallery = $(
+        '.article__item.article__item_alignment_left.article__item_gallery'
+      );
+
+      if (gallery.html()) {
+        projectData.gallery = $(gallery)
+          .html()
+          .replace(/:url\(/g, ':url(https://dobro.mail.ru');
+
+        projectData.html = $('.article__text')
+          .find(
             '.article__item.article__item_alignment_left.article__item_gallery'
-          );
+          )
+          .remove()
+          .end()
+          .html()
+          .replace(/src="/g, 'src="https://dobro.mail.ru');
+      } else {
+        projectData.gallery = '';
 
-          if (gallery.html()) {
-            projectData.gallery = $(gallery)
-              .html()
-              .replace(/:url\(/g, ':url(https://dobro.mail.ru');
+        projectData.html = $('.article__text')
+          .html()
+          .replace(/src="/g, 'src="https://dobro.mail.ru');
+      }
 
-            projectData.html = $('.article__text')
-              .find(
-                '.article__item.article__item_alignment_left.article__item_gallery'
-              )
-              .remove()
-              .end()
-              .html()
-              .replace(/src="/g, 'src="https://dobro.mail.ru');
-          } else {
-            projectData.gallery = '';
-
-            projectData.html = $('.article__text')
-              .html()
-              .replace(/src="/g, 'src="https://dobro.mail.ru');
-          }
-
-          resolve(projectData);
-        })
-        .catch(error => debug(error));
-    });
+      return projectData;
+    } catch (error) {
+      debug(error.message);
+    }
   }
 
   async getCities() {
