@@ -1,6 +1,6 @@
 //Instruments
 import { NotFoundError } from '../utils';
-import { donations, projects, users } from '../odm';
+import { donations, projects, users, fundraising } from '../odm';
 
 export class Donations {
   constructor(data) {
@@ -26,6 +26,16 @@ export class Donations {
     user.donations.push({ _id });
     user.points += 1;
     await user.save();
+
+    if (this.data.fundraising_id) {
+      const { fundraising_id } = this.data;
+      const oneFundraising = await fundraising.findOneAndUpdate(
+        { fundraising_id },
+        {
+          $inc: { sum: donation.amount },
+        }
+      );
+    }
 
     return donation;
   }

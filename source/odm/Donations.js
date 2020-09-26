@@ -1,5 +1,6 @@
 import mongoose from 'mongoose';
 import { projects } from './Projects';
+import { fundraising } from './Fundraising';
 
 const DonationsSchema = new mongoose.Schema({
   vk_user_id: {
@@ -8,7 +9,7 @@ const DonationsSchema = new mongoose.Schema({
   },
   project_id: {
     type: mongoose.SchemaTypes.ObjectId,
-    ref: projects,
+    ref: 'projects',
   },
   amount: {
     type: Number,
@@ -17,6 +18,10 @@ const DonationsSchema = new mongoose.Schema({
   transaction_id: {
     type: Number,
     required: true,
+  },
+  fundraising_id: {
+    type: mongoose.SchemaTypes.ObjectId,
+    ref: fundraising,
   },
   status: {
     type: String,
