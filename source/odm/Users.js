@@ -6,12 +6,12 @@ const UserSchema = new mongoose.Schema({
     type: Number,
     required: true,
   },
-  donations: [
-    {
-      type: mongoose.SchemaTypes.ObjectId,
-      ref: donations,
-    },
-  ],
+  // donations: [
+  //   {
+  //     type: mongoose.SchemaTypes.ObjectId,
+  //     ref: donations,
+  //   },
+  // ],
   points: {
     type: Number,
     required: true,

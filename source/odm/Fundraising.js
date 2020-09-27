@@ -3,11 +3,11 @@ import { projects } from './Projects';
 import { users } from './Users';
 
 const FundraisingSchema = new mongoose.Schema({
-  vk_user_id: {
+  vk_user: {
     type: mongoose.SchemaTypes.ObjectId,
     ref: 'users',
   },
-  project_id: {
+  project: {
     type: mongoose.SchemaTypes.ObjectId,
     ref: projects,
   },
@@ -25,12 +25,12 @@ const FundraisingSchema = new mongoose.Schema({
   },
   status: {
     type: String,
-    required: true,
+    enum: ['ACTIVE', 'FINISHED'],
   },
-  users: [
+  users_donated: [
     {
       type: mongoose.SchemaTypes.ObjectId,
-      ref: users,
+      ref: 'users',
     },
   ],
   created_at: {
@@ -44,3 +44,5 @@ const FundraisingSchema = new mongoose.Schema({
 });
 
 export const fundraising = mongoose.model('fundraising', FundraisingSchema);
+
+// { typeKey: '$type' }

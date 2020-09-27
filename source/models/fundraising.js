@@ -15,8 +15,8 @@ export class Fundraising {
 
     const newFundraising = await fundraising.create({
       ...this.data,
-      project_id: project._id,
-      vk_user_id: user._id,
+      project: project._id,
+      vk_user: user._id,
       status: 'ACTIVE',
       created_at: Date.now(),
     });
@@ -32,9 +32,10 @@ export class Fundraising {
     const user = await users.findOne({ vk_user_id });
 
     const data = await fundraising
-      .find({ vk_user_id: user._id })
-      .populate('project_id', '-_id -__v')
-      .populate('vk_user_id', '-_id -__v')
+      .find({ vk_user: user._id })
+      .populate('project', '-_id -__v')
+      .populate('vk_user', '-_id -__v')
+      .populate('users_donated', '-_id -__v')
       .select('-__v')
       .lean();
 

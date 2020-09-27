@@ -21,40 +21,51 @@ export class Donations {
       created_at: Date.now(),
     });
 
-    const { _id } = donation;
+    // const { _id } = donation;
 
-    user.donations.push({ _id });
+    // user.donations.push({ _id });
     user.points += 1;
     await user.save();
 
     if (this.data.fundraising_id) {
       const { fundraising_id } = this.data;
-      const oneFundraising = await fundraising.findOneAndUpdate(
-        { fundraising_id },
-        {
-          $inc: { sum: donation.amount },
-        }
-      );
+      //   const oneFundraising = await fundraising.findOneAndUpdate(
+      //     { _id: fundraising_id },
+      //     {
+      //       $inc: { sum: donation.amount },
+      //       status: {
+      //         $cond: [{ $gte: ['$sum', 50000] }, 'FINISHED', 'ACTIVE'],
+      //       },
+      //     }
+      //   );
+      // }
+      const oneFundraising = await fundraising.findOne({ _id: fundraising_id });
+      oneFundraising.sum += donation.amount;
+      if (oneFundraising.sum >= oneFundraising.target) {
+        oneFundraising.status = 'FINISHED';
+      }
+      oneFundraising.modified_at = Date.now();
+      oneFundraising.users_donated.push(user._id);
+      await oneFundraising.save();
+
+      return donation;
     }
 
-    return donation;
+    //   async addDonation() {
+    //     const { id, payload } = this.data;
+
+    //     const data = await donations.findOneAndUpdate(
+    //         { id },
+    //         { $addToSet: { '': payload } },
+    //         { new: true },
+    //     );
+
+    //     if (!data) {
+    //         throw new NotFoundError(`can not find document with hash ${hash}`);
+    //     }
+
+    //     return data;
   }
-
-  //   async addDonation() {
-  //     const { id, payload } = this.data;
-
-  //     const data = await donations.findOneAndUpdate(
-  //         { id },
-  //         { $addToSet: { '': payload } },
-  //         { new: true },
-  //     );
-
-  //     if (!data) {
-  //         throw new NotFoundError(`can not find document with hash ${hash}`);
-  //     }
-
-  //     return data;
-  // }
 
   async getDonationsById() {
     const { vk_user_id } = this.data;
