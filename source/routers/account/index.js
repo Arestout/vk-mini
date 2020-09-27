@@ -31,14 +31,14 @@ const get = async (req, res) => {
 
 router.get('/', [checkHash], get);
 
-router.get('/donations', getDonationsById);
-router.post('/donations', postDonations);
+router.get('/donations', [checkHash], getDonationsById);
+router.post('/donations', [checkHash], postDonations);
 
 router.get('/achievements', [checkHash], getPointsById);
 router.post('/achievements/wall', [checkHash], postWallPoints);
 router.post('/achievements/stories', [checkHash], postStoriesPoints);
 
-router.get('/fundraising', getFundraisingByUserId);
-router.post('/fundraising', postNewFundraising);
+router.get('/fundraising', [checkHash], getFundraisingByUserId);
+router.post('/fundraising', [checkHash], postNewFundraising);
 
 export { router as account };

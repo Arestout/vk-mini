@@ -13,7 +13,6 @@ const FundraisingSchema = new mongoose.Schema({
   },
   fragment: {
     type: String,
-    required: true,
   },
   target: {
     type: Number,
