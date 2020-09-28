@@ -9,6 +9,9 @@ import { getPort } from './utils';
 import './db';
 
 // const PORT = getPort() || 5000;
-// const dg = debug('server:main');
+const PORT = process.env.PORT || 5000;
+const dg = debug('server:main');
 
-app.listen(process.env.PORT || 5000);
+app.listen(PORT, () => {
+  dg(`Server API is running on port ${PORT}`);
+});
