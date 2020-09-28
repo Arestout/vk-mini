@@ -8,7 +8,7 @@ import { getPort } from './utils';
 // DB;
 import './db';
 
-const PORT = getPort();
+const PORT = getPort() || 3000;
 const dg = debug('server:main');
 
 app.listen(PORT, () => {
