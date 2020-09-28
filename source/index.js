@@ -9,6 +9,6 @@ import { getPort } from './utils';
 import './db';
 
 // const PORT = getPort() || 5000;
-const dg = debug('server:main');
+// const dg = debug('server:main');
 
 app.listen(process.env.PORT || 5000);
