@@ -254,8 +254,7 @@ export class Projects {
       stats: {},
       cities: [],
     };
-    // const cities = [];
-    // const stats = [];
+
     const url = `https://dobro.mail.ru/`;
 
     return new Promise((resolve, reject) => {

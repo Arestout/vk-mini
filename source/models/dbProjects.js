@@ -73,7 +73,7 @@ export class DbProjects {
   }
 
   async addAllProjects() {
-    // await projects.deleteMany({});
+    // await projects.deleteMany({} );
 
     try {
       const browser = await puppeteer.launch({
