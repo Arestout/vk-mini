@@ -36,22 +36,27 @@ export class Projects {
     const SELECTOR = '.m-pager__inner';
     const projectsCountDesktop = 12;
     const projectsCountMobile = 5;
-    await puppeteer.launch({ headless: true }).then(async browser => {
-      const page = await browser.newPage();
-      await page.emulate(iPhoneX);
-      await page.goto(url);
-      const pagesMobileVersion = await page.$$eval(SELECTOR, elements => {
-        if (elements[elements.length - 1]) {
-          return elements[elements.length - 1].innerText;
+    await puppeteer
+      .launch({
+        args: ['--no-sandbox', '--disable-setuid-sandbox'],
+        headless: true,
+      })
+      .then(async browser => {
+        const page = await browser.newPage();
+        await page.emulate(iPhoneX);
+        await page.goto(url);
+        const pagesMobileVersion = await page.$$eval(SELECTOR, elements => {
+          if (elements[elements.length - 1]) {
+            return elements[elements.length - 1].innerText;
+          }
+        });
+        if (pagesMobileVersion && pagesMobileVersion > 2) {
+          this.pagesCount = Math.ceil(
+            (pagesMobileVersion * projectsCountMobile) / projectsCountDesktop
+          );
         }
+        await browser.close();
       });
-      if (pagesMobileVersion && pagesMobileVersion > 2) {
-        this.pagesCount = Math.ceil(
-          (pagesMobileVersion * projectsCountMobile) / projectsCountDesktop
-        );
-      }
-      await browser.close();
-    });
     return this.pagesCount;
   }
 
