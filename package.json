@@ -13,15 +13,8 @@
     },
     "license": "MIT",
     "devDependencies": {
-        "@babel/core": "^7.7.5",
-        "@babel/plugin-proposal-class-properties": "^7.7.4",
-        "@babel/preset-env": "^7.7.6",
-       
-        "babel-cli": "^6.26.0",
-        "babel-core": "^7.0.0-bridge.0",
         "babel-eslint": "~10.0.3",
         "babel-jest": "^24.9.0",
-        "babel-loader": "^8.0.6",
         "babel-preset-jest": "^24.9.0",
         "eslint": "^6.7.2",
         "eslint-plugin-babel": "^5.3.1",
@@ -64,6 +57,12 @@
         "uuid": "^3.3.3",
         "winston": "^3.2.1",
         "xml2js": "^0.4.23",
-        "@babel/register": "^7.7.4"
+        "@babel/register": "^7.7.4",
+        "@babel/core": "^7.7.5",
+        "@babel/plugin-proposal-class-properties": "^7.7.4",
+        "@babel/preset-env": "^7.7.6",
+        "babel-cli": "^6.26.0",
+        "babel-core": "^7.0.0-bridge.0",
+        "babel-loader": "^8.0.6",
     }
 }
