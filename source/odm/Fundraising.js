@@ -18,7 +18,7 @@ const FundraisingSchema = new mongoose.Schema({
     type: Number,
     required: true,
   },
-  sum: {
+  amount: {
     type: Number,
     required: true,
   },
