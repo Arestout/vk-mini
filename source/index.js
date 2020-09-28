@@ -8,8 +8,7 @@ import { getPort } from './utils';
 // DB;
 import './db';
 
-// const PORT = getPort() || 5000;
-const PORT = process.env.PORT || 5000;
+const PORT = getPort() || 5000;
 const dg = debug('server:main');
 
 app.listen(PORT, () => {
