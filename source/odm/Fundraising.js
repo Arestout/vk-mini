@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 import { projects } from './Projects';
-import { users } from './Users';
+// import { users } from './Users';
 
 const FundraisingSchema = new mongoose.Schema({
   vk_user: {
