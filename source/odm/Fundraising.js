@@ -43,5 +43,3 @@ const FundraisingSchema = new mongoose.Schema({
 });
 
 export const fundraising = mongoose.model('fundraising', FundraisingSchema);
-
-// { typeKey: '$type' }
