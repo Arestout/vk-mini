@@ -39,10 +39,11 @@ export class Projects {
       const page = await browser.newPage();
       await page.emulate(iPhoneX);
       await page.goto(url);
-      const pagesMobileVersion = await page.$$eval(
-        SELECTOR,
-        elements => elements[elements.length - 1]?.innerText
-      );
+      const pagesMobileVersion = await page.$$eval(SELECTOR, elements => {
+        if (elements[elements.length - 1]) {
+          return elements[elements.length - 1].innerText;
+        }
+      });
       if (pagesMobileVersion && pagesMobileVersion > 2) {
         this.pagesCount = Math.ceil(
           (pagesMobileVersion * projectsCountMobile) / projectsCountDesktop

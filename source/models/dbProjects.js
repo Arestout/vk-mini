@@ -74,7 +74,6 @@ export class DbProjects {
 
   async addAllProjects() {
     // await projects.deleteMany({});
-    // const projects = [];
 
     try {
       const browser = await puppeteer.launch({
@@ -142,8 +141,6 @@ export class DbProjects {
             !doesProjectExist && (await projects.create(project));
           })();
         }
-
-        //   DbProjectsOdm.create(project);
       });
 
       await browser.close();
