@@ -46,7 +46,7 @@ export class Achievements {
       .findOneAndUpdate(
         { vk_user_id },
         {
-          $inc: { points: 1 },
+          $inc: { points: 0.5 },
         },
         { new: true }
       )
