@@ -39,6 +39,7 @@ export class Donations {
       //     }
       //   );
       // }
+      console.log('test');
       const oneFundraising = await fundraising.findOne({ _id: fundraising_id });
       oneFundraising.sum += donation.amount;
       if (oneFundraising.sum >= oneFundraising.target) {
@@ -47,10 +48,8 @@ export class Donations {
       oneFundraising.modified_at = Date.now();
       oneFundraising.users_donated.push(user._id);
       await oneFundraising.save();
-
-      return donation;
     }
-
+    return donation;
     //   async addDonation() {
     //     const { id, payload } = this.data;
 
