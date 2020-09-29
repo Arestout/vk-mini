@@ -10,11 +10,9 @@
     },
     "env": {
       "VKONTAKTE_APP_ID": {
-        "description": "",
         "value": "7587231"
       },
       "VKONTAKTE_APP_SECRET": {
-        "description": "",
         "value": "EQUaU2oo4mGGTI7NVxoS"
       },
       "PORT": {
