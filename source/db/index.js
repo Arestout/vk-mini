@@ -6,7 +6,8 @@ import dg from 'debug';
 import { getDB } from '../utils';
 
 const debug = dg('db');
-const { DB_URL, DB_PORT, DB_NAME } = getDB();
+// const { DB_URL, DB_PORT, DB_NAME } = getDB();
+const DB_URL = process.env.DB_URL || process.env.MONGODB_URL;
 
 const mongooseOptions = {
   promiseLibrary: global.Promise,
@@ -18,10 +19,12 @@ const mongooseOptions = {
   useCreateIndex: true,
   useUnifiedTopology: true,
   autoIndex: false,
+  retryWrites: true,
+  w: 'majority',
 };
 
 export const connection = mongoose.connect(
-  `mongodb+srv://${DB_URL}/${DB_NAME}?retryWrites=true&w=majority`,
+  `mongodb+srv://${DB_URL}/vk-app?retryWrites=true&w=majority`,
   mongooseOptions
 );
 
