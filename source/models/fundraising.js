@@ -63,6 +63,22 @@ export class Fundraising {
     return data;
   }
 
+  async getActiveFundraisingCountByUserId() {
+    const { vk_user_id } = this.data;
+    const user = await users.findOne({ vk_user_id });
+
+    const data = await fundraising.countDocuments({
+      vk_user: user._id,
+      status: 'ACTIVE',
+    });
+
+    if (!data) {
+      throw new NotFoundError(`у пользователя ${vk_user_id} нет доброфонов`);
+    }
+
+    return { count: data };
+  }
+
   //   async removeByTransactionId() {
   //     const { transaction_id } = this.data;
 

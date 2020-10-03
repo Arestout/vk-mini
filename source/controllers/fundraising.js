@@ -41,4 +41,10 @@ export class Fundraising {
 
     return data;
   }
+
+  async getActiveFundraisingCountByUserId() {
+    const data = await this.models.fundraising.getActiveFundraisingCountByUserId();
+
+    return data;
+  }
 }

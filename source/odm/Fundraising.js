@@ -11,9 +11,6 @@ const FundraisingSchema = new mongoose.Schema({
     type: mongoose.SchemaTypes.ObjectId,
     ref: projects,
   },
-  fragment: {
-    type: String,
-  },
   target: {
     type: Number,
     required: true,

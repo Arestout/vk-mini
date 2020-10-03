@@ -36,6 +36,21 @@ export const getFundraisingById = async (req, res) => {
   }
 };
 
+export const getActiveFundraisingCountByUserId = async (req, res) => {
+  debug(`${req.method} - ${req.originalUrl}`);
+
+  try {
+    const { vk_user_id } = req.query;
+
+    const model = new Fundraising({ vk_user_id });
+    const data = await model.getActiveFundraisingCountByUserId();
+
+    res.status(201).json(data);
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
+};
+
 export const postNewFundraising = async (req, res) => {
   debug(`${req.method} - ${req.originalUrl}`);
 
