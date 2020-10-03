@@ -12,7 +12,11 @@ import {
   postWallPoints,
   postStoriesPoints,
 } from './achievements';
-import { postNewFundraising, getFundraisingByUserId } from './fundraising';
+import {
+  postNewFundraising,
+  getFundraisingByUserId,
+  getFundraisingById,
+} from './fundraising';
 
 const debug = dg('router:account');
 
@@ -39,6 +43,7 @@ router.post('/achievements/wall', [checkHash], postWallPoints);
 router.post('/achievements/stories', [checkHash], postStoriesPoints);
 
 router.get('/fundraising', [checkHash], getFundraisingByUserId);
+router.get('/fundraising/:id', [checkHash], getFundraisingById);
 router.post('/fundraising', [checkHash], postNewFundraising);
 
 export { router as account };

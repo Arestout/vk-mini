@@ -40,7 +40,24 @@ export class Fundraising {
       .lean();
 
     if (!data) {
-      return [];
+      throw new NotFoundError(`у пользователя ${vk_user_id} нет доброфонов`);
+    }
+
+    return data;
+  }
+
+  async getFundraisingById() {
+    const { fundraising_id } = this.data;
+    const data = await fundraising
+      .findOne({ _id: fundraising_id })
+      .populate('project', '-_id -__v')
+      .populate('vk_user', '-_id -__v')
+      .populate('users_donated', '-_id -__v')
+      .select('-__v')
+      .lean();
+
+    if (!data) {
+      throw new NotFoundError(`нет доброфонов с id ${fundraising_id}`);
     }
 
     return data;

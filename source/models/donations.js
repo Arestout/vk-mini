@@ -68,7 +68,6 @@ export class Donations {
 
   async getDonationsById() {
     const { vk_user_id } = this.data;
-    console.log({ vk_user_id });
 
     const data = await donations
       .find({ vk_user_id })
@@ -85,7 +84,7 @@ export class Donations {
     if (!data) {
       return [];
     }
-    console.log({ data });
+
     return data;
   }
 

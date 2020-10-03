@@ -6,6 +6,18 @@ const UserSchema = new mongoose.Schema({
     type: Number,
     required: true,
   },
+  first_name: {
+    type: String,
+    required: true,
+  },
+  last_name: {
+    type: String,
+    required: true,
+  },
+  photo_200: {
+    type: String,
+    required: true,
+  },
   // donations: [
   //   {
   //     type: mongoose.SchemaTypes.ObjectId,

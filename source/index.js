@@ -3,7 +3,7 @@ import debug from 'debug';
 
 // Instruments
 import { app } from './server';
-import { getPort } from './utils';
+// import { getPort } from './utils';
 
 // DB;
 import './db';

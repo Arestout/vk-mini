@@ -3,7 +3,6 @@ import {
   Achievements as AchievementsModel,
   Donations as DonationsModel,
   Users as UsersModel,
-  Fundraising as FundraisingModel,
 } from '../models';
 
 export class Account {
@@ -12,7 +11,6 @@ export class Account {
       achievements: new AchievementsModel(data),
       donations: new DonationsModel(data),
       users: new UsersModel(data),
-      fundraising: new FundraisingModel(data),
     };
   }
 
@@ -64,24 +62,6 @@ export class Account {
     }
 
     const data = await this.models.achievements.postStoriesPoints();
-
-    return data;
-  }
-
-  async createFundraising() {
-    const doesUserExist = await this.models.users.exists();
-
-    if (!doesUserExist) {
-      await this.createUser();
-    }
-
-    const data = await this.models.fundraising.create();
-
-    return data;
-  }
-
-  async getFundraisingByUserId() {
-    const data = await this.models.fundraising.getFundraisingByUserId();
 
     return data;
   }

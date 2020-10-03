@@ -16,11 +16,13 @@ export class Users {
   }
 
   async create() {
-    const { vk_user_id } = this.data;
+    const { vk_user_id, first_name, last_name, photo_200 } = this.data;
 
     const user = await users.create({
       vk_user_id,
-      donations: [],
+      first_name,
+      last_name,
+      photo_200,
       points: 0,
     });
 

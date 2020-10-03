@@ -3,7 +3,7 @@ import mongoose from 'mongoose';
 import dg from 'debug';
 
 // Instruments
-import { getDB } from '../utils';
+// import { getDB } from '../utils';
 
 const debug = dg('db');
 // const { DB_URL, DB_PORT, DB_NAME } = getDB();
@@ -30,8 +30,8 @@ export const connection = mongoose.connect(
 
 connection
   .then(() => {
-    debug(`DB ${DB_NAME} connected`);
+    debug(`DB vk-app connected`);
   })
   .catch(({ message }) => {
-    debug(`DB ${DB_NAME} connected error ${message}`);
+    debug(`DB vk-app connected error ${message}`);
   });
