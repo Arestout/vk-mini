@@ -17,6 +17,10 @@ const ProjectsSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  path: {
+    type: String,
+    required: true,
+  },
   target: {
     type: Number,
     required: true,

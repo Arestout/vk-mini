@@ -135,11 +135,21 @@ export class DbProjects {
           createdAt: Date.now(),
         };
 
-        if (project.id) {
+        if (project.projectId) {
           (async () => {
-            const doesProjectExist = await projects.exists({ id: project.id });
-            !doesProjectExist && (await projects.create(project));
+            try {
+              const query = { id: project.projectId };
+              const options = { upsert: true, new: true };
+
+              await projects.findOneAndUpdate(query, project, options);
+            } catch (e) {
+              debug(e.message);
+            }
           })();
+          // (async () => {
+          //   const doesProjectExist = await projects.exists({ id: project.id });
+          //   !doesProjectExist && (await projects.create(project));
+          // })();
         }
       });
 
@@ -147,7 +157,7 @@ export class DbProjects {
 
       return 'done';
     } catch (error) {
-      debug(error);
+      debug(error.message);
       return error;
     }
   }
