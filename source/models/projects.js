@@ -249,6 +249,23 @@ export class Projects {
           .replace(/src="/g, 'src="https://dobro.mail.ru');
       }
 
+      if (projectData.id) {
+        (async () => {
+          try {
+            const query = { id: projectData.id };
+            const update = {
+              html: projectData.html,
+              gallery: projectData.gallery,
+            };
+            const options = { upsert: false, new: false };
+
+            await projects.findOneAndUpdate(query, update, options);
+          } catch (e) {
+            debug(e.message);
+          }
+        })();
+      }
+
       return projectData;
     } catch (error) {
       debug(error.message);

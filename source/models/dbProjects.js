@@ -77,7 +77,7 @@ export class DbProjects {
 
     try {
       const browser = await puppeteer.launch({
-        headless: true,
+        headless: false,
         args: ['--no-sandbox', '--disable-setuid-sandbox'],
       });
       const page = await browser.newPage();
@@ -87,69 +87,69 @@ export class DbProjects {
       );
 
       await this.getRssProjects();
-      const items = await this.getParsedProjects(page, 1500);
+      const items = await this.getParsedProjects(page, 2500);
 
-      items.forEach(item => {
-        const $ = cheerio.load(item);
-        const description = $('.p-project__lead')
-          .find('strong')
-          .remove()
-          .end()
-          .text()
-          .trim();
+      items.forEach(async item => {
+        try {
+          const $ = cheerio.load(item);
+          const description = $('.p-project__lead')
+            .find('strong')
+            .remove()
+            .end()
+            .text()
+            .trim();
 
-        const parsedRssProject = this.parsedRssProjects.find(
-          item => item.typePrefix.join(' ') === description
-        );
+          const parsedRssProject = this.parsedRssProjects.find(
+            item => item.typePrefix.join(' ') === description
+          );
 
-        let projectId = null;
-        let path = null;
-        if (parsedRssProject) {
-          projectId = parsedRssProject.$.id;
-          path = parsedRssProject.model.join('');
-        }
+          let projectId = null;
+          let path = null;
+          if (parsedRssProject) {
+            projectId = parsedRssProject.$.id;
+            path = parsedRssProject.model.join('');
+          }
 
-        const image = $('.photo__pic')
-          .css('background-image')
-          .replace(/(url\(|\))/g, '');
+          const image = $('.photo__pic')
+            .css('background-image')
+            .replace(/(url\(|\))/g, '');
 
-        const title = $('.p-project__name.link-holder').text();
+          const title = $('.p-project__name.link-holder').text();
 
-        const city = $('.p-project__info-city.link-holder_over').text();
+          const city = $('.p-project__info-city.link-holder_over').text();
 
-        const target = $('.p-money__money.p-money__money_goal')
-          .text()
-          .replace('р.', '')
-          .trim()
-          .split(' ')
-          .join('');
+          const target = $('.p-money__money.p-money__money_goal')
+            .text()
+            .replace('р.', '')
+            .trim()
+            .split(' ')
+            .join('');
 
-        const project = {
-          projectId,
-          image: `https://dobro.mail.ru${image}`,
-          city,
-          title,
-          path,
-          description,
-          target: Number(target),
-          createdAt: Date.now(),
-        };
+          const project = {
+            projectId,
+            image: `https://dobro.mail.ru${image}`,
+            city,
+            title,
+            path,
+            description,
+            target: Number(target),
+            createdAt: Date.now(),
+          };
 
-        if (project.projectId) {
-          (async () => {
-            try {
-              const query = { id: project.projectId };
-              const options = { upsert: true, new: true };
+          if (project.projectId) {
+            (async () => {
+              try {
+                const query = { id: project.projectId };
+                const options = { upsert: true, new: true };
 
-              await projects.findOneAndUpdate(query, project, options);
-            } catch (e) {
-              debug(e.message);
-            }
-          })();
-          // (async () => {
-          //   const doesProjectExist = await projects.exists({ id: project.id });
-          //   !doesProjectExist && (await projects.create(project));
-          // })();
+                await projects.findOneAndUpdate(query, project, options);
+              } catch (e) {
+                debug(e.message);
+              }
+            })();
+          }
+        } catch (err) {
+          console.log(err.message);
         }
       });
 
@@ -157,7 +157,7 @@ export class DbProjects {
 
       return 'done';
     } catch (error) {
-      debug(error.message);
+      console.log(error.message);
       return error;
     }
   }

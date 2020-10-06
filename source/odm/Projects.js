@@ -21,6 +21,12 @@ const ProjectsSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  html: {
+    type: String,
+  },
+  gallery: {
+    type: String,
+  },
   target: {
     type: Number,
     required: true,
