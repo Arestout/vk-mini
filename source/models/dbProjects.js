@@ -131,7 +131,6 @@ export class DbProjects {
             city,
             title,
             path,
-            description,
             target: Number(target),
             createdAt: Date.now(),
           };

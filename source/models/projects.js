@@ -257,6 +257,7 @@ export class Projects {
             const update = {
               html: projectData.html,
               gallery: projectData.gallery,
+              description: projectData.description,
             };
             const options = { upsert: false, new: false };
 
