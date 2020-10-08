@@ -194,6 +194,7 @@ export class Projects {
       }
 
       projectData.id = id;
+      projectData.path = path;
       projectData.title = title;
       projectData.description = $('.p-project__lead').text();
       projectData.cityLink = $('.link.color_gray.breadcrumbs__link')
