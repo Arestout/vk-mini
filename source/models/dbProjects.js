@@ -98,7 +98,7 @@ export class DbProjects {
             .end()
             .text()
             .trim();
-
+          console.log(description);
           const parsedRssProject = this.parsedRssProjects.find(
             item => item.typePrefix.join(' ') === description
           );

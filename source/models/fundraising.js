@@ -31,7 +31,7 @@ export class Fundraising {
     const { vk_user_id } = this.data;
     const user = await users.findOne({ vk_user_id });
 
-    const data = await fundraising
+    const createdFundraising = await fundraising
       .find({ vk_user: user._id })
       .populate('project', '-_id -__v')
       .populate('vk_user', '-_id -__v')
@@ -39,11 +39,20 @@ export class Fundraising {
       .select('-__v')
       .lean();
 
-    if (!data) {
+    const participatedFundraising = await users
+      .findOne({ vk_user_id })
+      .select('fundraising_participate')
+      .populate('fundraising_participate')
+      .lean();
+
+    if (!createdFundraising || !participatedFundraising) {
       throw new NotFoundError(`у пользователя ${vk_user_id} нет доброфонов`);
     }
 
-    return data;
+    return {
+      created: createdFundraising,
+      participated: participatedFundraising,
+    };
   }
 
   async getFundraisingById() {

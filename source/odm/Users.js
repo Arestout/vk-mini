@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-import { donations } from './Donations';
+import { fundraising } from './Fundraising';
 
 const UserSchema = new mongoose.Schema({
   vk_user_id: {
@@ -18,12 +18,12 @@ const UserSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  // donations: [
-  //   {
-  //     type: mongoose.SchemaTypes.ObjectId,
-  //     ref: donations,
-  //   },
-  // ],
+  fundraising_participate: [
+    {
+      type: mongoose.SchemaTypes.ObjectId,
+      ref: fundraising,
+    },
+  ],
   points: {
     type: Number,
     required: true,

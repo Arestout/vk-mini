@@ -39,7 +39,9 @@ export class Donations {
       //     }
       //   );
       // }
-
+      console.log('TEST');
+      user.fundraising_participate.push({ _id: fundraising_id });
+      await user.save();
       const oneFundraising = await fundraising.findOne({ _id: fundraising_id });
       oneFundraising.sum += donation.amount;
       if (oneFundraising.sum >= oneFundraising.target) {
